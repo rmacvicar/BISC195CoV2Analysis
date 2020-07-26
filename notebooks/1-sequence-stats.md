@@ -13,6 +13,7 @@ fasta_path = normpath(joinpath(@__DIR__, "..", "CoV2", "data", "SARS-CoV-2+MERS.
 parsed_seq = parse_fasta(fasta_path); 
 seq_lengths = [] #vector to store lengths of each sequence
 seq = parsed_seq[2]; #assign sequences to seq
+seq_headers = parsed_seq[1]; #store headers for each sequence
 seq_gc = []
 for n in 1:length(parsed_seq[2])
     push!(seq_lengths, length(seq[n])) #add length of each sequence to seq_lengths
@@ -35,11 +36,22 @@ for i in 1:length(seq)
     kmer_storage[i] = kmer_match(seq[i], 8)
 end
 
-#find the distance between each sequence kmer set
-for i in 1:length(seq)
-    for n in 1:length(seq)
-        dist_metric = kmer_dist(kmer_storage[i], kmer_storage[n])
-        if dist_metric 
+#find the distance between each sequence kmer set and print summary of most closely related sequences
+dist_metrics = []
+for i in 1:length(seq) 
+    for n in 1:length(seq) #compare all of the sequences' kmers to
+        if n != i 
+            push!(dist_metrics, kmer_dist(kmer_storage[i], kmer_storage[n]))
+        end
+    end
+    #determine which sequences are most closely related
+    most_sim = findmin(dist_metrics) #index of sequence with the smallest distance metric
+    println("$seq_headers[i] shares the most kmers with $seq_headers[most_sim[2]]")
+    dist_metrics = [] #reset dist_metrics vector
+end
+
+
+
 
 
 
