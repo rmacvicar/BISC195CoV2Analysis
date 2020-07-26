@@ -25,4 +25,22 @@ std_seq_length = std(seq_lengths)
 #sequence gc content stats
 mean_seq_gc = mean(seq_gc)
 std_seq_gc = std(seq_gc)
+#finding the max and min sequences in fasta file
+min_seqlen = minimum(seq_lengths)
+max_seqlen = maximum(seq_lengths)
+
+#find the unique kmers in each sequence
+kmer_storage = Dict()
+for i in 1:length(seq)
+    kmer_storage[i] = kmer_match(seq[i], 8)
+end
+
+#find the distance between each sequence kmer set
+for i in 1:length(seq)
+    for n in 1:length(seq)
+        dist_metric = kmer_dist(kmer_storage[i], kmer_storage[n])
+        if dist_metric 
+
+
+
 ```
